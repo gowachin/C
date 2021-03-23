@@ -1,0 +1,507 @@
+\documentclass[12pt,a4paper,notitlepage,colorinlistoftodos]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Template pour rendus Master
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[utf8]{inputenc} %encodage
+\usepackage[T1]{fontenc}
+
+\usepackage[square,sort,comma,numbers]{natbib} % bibliography
+\setcitestyle{authoryear,open={(},close={)}}
+\renewcommand{\bibsection}{}
+
+\usepackage[french]{babel} % langue
+% add '\-' to create custom hypernation if a word is difficult to cut or :
+\hyphenation{geo-graphique}
+
+%mise en page générale
+\usepackage{geometry}
+%\geometry{a4paper} % format de feuille
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm} %marges
+\usepackage{mathptmx} % Police Times si compilateur pdfLatex
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{times}
+\setlength{\parindent}{0pt}
+
+\linespread{1} % interligne
+\usepackage{fancyhdr} %en tete et pied de page
+\usepackage{lastpage}  %marche pas chez julia
+\pagestyle{plain} 
+
+\usepackage{lscape} % page en landscape
+
+\usepackage{multicol}
+\usepackage{hhline}
+\setlength{\columnsep}{1cm}
+
+\usepackage{hyperref,url} % lien cliquables
+\hypersetup{
+colorlinks = true,
+linkcolor = black,
+urlcolor = RoyalBlue
+}
+\usepackage{lipsum} %Lorem ipsum
+
+\usepackage{wrapfig} %position d'images dans le texte
+\usepackage{graphicx, subcaption, setspace, booktabs, wrapfig}
+
+\usepackage[table,dvipsnames]{xcolor}
+
+\usepackage{caption}
+\DeclareCaptionType{annexe}[Annexe][Liste d'annexes] % rajout pour captions annexes
+\DeclareCaptionType{web}[Web][Sites Web] % rajout pour mettre des captions web
+
+\usepackage{todonotes} % notes et commentaires
+%\usepackage[disable]{todonotes} % pour supprimer les commentaires lors de la compil
+
+\usepackage[export]{adjustbox}
+
+\usepackage[para,online,flushleft]{threeparttable}
+
+
+\usepackage{listings}
+\usepackage{color}
+ 
+%http://latexcolor.com/ 
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{cerulean}{rgb}{0.0, 0.48, 0.65}
+\definecolor{beaublue}{rgb}{0.95, 0.95, 0.95}
+\definecolor{amber}{rgb}{1.0, 0.25, 0.0}
+\definecolor{indiagreen}{rgb}{0.07, 0.53, 0.03}
+\definecolor{number}{rgb}{0.01, 0.01, 0.01}
+
+
+\lstset{language=C}
+
+  \lstset{emphstyle=\color{blue},
+  inputencoding=latin1,
+  basicstyle=\footnotesize,
+  breaklines=true,
+  keywordstyle=\bf\color{amber},
+  commentstyle=\color{indiagreen},
+  stringstyle=\color{cerulean},
+  numberstyle=\color{number},
+  backgroundcolor=\color{beaublue},
+  morecomment=[s][\color{black}]{[}{]},
+  morecomment=[s][\color{cerulean}]{[~}{]:},
+  numbers=none,
+  numbersep=5pt,
+  lineskip=0.7pt,
+  columns=fullflexible, % was flexible before but it induce space in '/2entier' like '/2 entier'
+  showstringspaces=false ,
+  literate=%
+         {é}{{\'e}}1}
+        
+          \newcommand{\FSource}[1]{%
+          \lstinputlisting[texcl=true]{#1}
+          }
+
+%%%%%%%%%%%% skip an all paragraphe, between this bornes %%%%%%%%%%%%%%%%%%
+%\iffalse
+%\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% nouvelles commandes spécifique au doc %%%%%%%%%%%%%%%%%%
+
+\DeclareRobustCommand{\rchi}{{\mathpalette\irchi\relax}}
+\newcommand{\irchi}[2]{\raisebox{\depth}{$#1\chi$}}
+\renewcommand*\contentsname{Table des matières}
+\newcommand{\unit}[1]{\hfill\text{}[\mathrm{#1}]}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page de garde
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\begin{figure}
+    \begin{minipage}{.75\textwidth}
+    \begin{center}
+    {\Large INF203 : Compte-rendu TP6 \\ \textbf{C : Chaines de caracteres, structures}}
+    \end{center}
+    %\vspace{\baselineskip}
+    %\setlength{\parskip}{\smallskipamount}
+    \rule{7em}{.4pt}\par
+     Alexandre Dupré, Maxime Jaunatre, Clément Raspail | INF - 3 \par 
+     %\href{mailto:\href{mailto:maxime.jaunatre@etu.univ-grenoble-alpes.fr}{Mail $^1$} | \today \par 
+     \href{mailto:alexandre.dupre@etu.univ-grenoble-alpes.fr,maxime.jaunatre@etu.univ-grenoble-alpes.fr, clement.raspail@etu.univ-grenoble-alpes.fr}{Mail} | \today
+\end{minipage}
+\end{figure}
+
+\hrule
+
+\section*{Syntaxe}
+
+\iffalse
+ Alexandre Dupré <alexandre.dupre@etu.univ-grenoble-alpes.fr>
+ Maxime Jaunatre <maxime.jaunatre@etu.univ-grenoble-alpes.fr> 
+ Clément Raspail <clement.raspail@etu.univ-grenoble-alpes.fr>
+\fi
+
+Pour ce compte rendu la syntaxe des commandes sera la suivante :
+\begin{lstlisting}
+[~chemin]: commande
+retour de la commande
+\end{lstlisting}
+
+Example :
+\begin{lstlisting}
+[~/INF203]: ls
+sauve_TP1   TP1   TP2
+\end{lstlisting}
+
+Si la commande est interactive et demande d'appuyer  sur entrée, une caractère '->' est indiqué.
+
+Les fichiers sont en \textit{italique} et les commandes (ou détails de retour de commande) en \textbf{gras}. Un script sera donc en gras quand il sera appelé comme une commande.
+
+
+Les fichiers sources en C sont compilés avec clang, et un nom est donné avec l'option \textbf{clang -o}. Cela implique que les programmes seront appelés par un autre nom que \textbf{a.out}.
+
+% #################################################################################################################################################################
+
+\subsection*{Pour s'échauffer : quelques gammes avec des chaînes de caractères}
+
+
+[a] 
+\begin{lstlisting}
+'p' 'l' 'o' 'm' 't' 'r' 'a' 'l' 'a' 'l' 'a' '\0'
+\end{lstlisting}
+
+
+[b]
+\begin{lstlisting}
+[~/INF203/TP6]: clang -o chaines chaines.c ; ./chaines 
+un mot (pas trop long !) à mesurer ?
+cthulhu
+longueur de la chaine cthulhu :7
+On a bien copié ici le mot : cthulhu 
+Les deux chaines cthulhu et cthulhu sont identiques
+On a bien concaténé ici le mot avec lui même : cthulhucthulhu 
+Les deux chaines cthulhucthulhu et cthulhu sont différentes
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP6]: cat chaines.c
+#include <stdio.h>
+#include <string.h>
+#include "generer_entier.c"
+#include "bouts_de_phrases.c"
+
+/* longueur de la chaine passee en parametre */
+unsigned long mon_strlen(char *ch) {
+	int i;
+	for (i=0 ; ch[i] != '\0' ; i++)
+		;
+	return i ;
+}
+
+void mon_strcopy(char *destination, char *source){
+	int i;
+	for(i=0;source[i]!= '\0'; i++){
+		destination[i] = source[i];
+	}
+	destination[i+1] = '\0';
+}
+
+/* Concatène source à la fin de destination */
+void mon_strcat(char *destination, char *source){
+	int i;
+	int j = 0;
+	for(i = mon_strlen(destination) ;source[j]!= '\0'; i++){
+		destination[i] = source[j];
+		j++;
+	}
+	destination[i+1] = '\0';
+}
+
+int mon_strcmp(char *chaine1, char *chaine2){
+	int i;
+	int rep = 0;
+	for(i = 0; chaine1[i]!= '\0' || chaine2[i]!= '\0' ;i++){
+		if (chaine1[i] != chaine2[i]){
+			rep=1;
+		}
+	}
+	return rep;
+}
+
+int main() {
+	char chaine[50] ;
+	unsigned long mon_resultat ;
+
+	printf("un mot (pas trop long !) à mesurer ?\n") ;
+	scanf("%49s", chaine) ;
+	mon_resultat=mon_strlen(chaine) ;
+	if (mon_resultat == strlen(chaine) )
+		printf("longueur de la chaine %s :%lu\n", chaine, mon_resultat) ;
+	else
+		printf("non, la longueur de '%s' n'est pas %lu\n", chaine, mon_resultat) ;
+
+
+	char temp[mon_resultat *2 + 1];
+	mon_strcopy(temp, chaine);
+	printf("On a bien copié ici le mot : %s \n", temp);
+
+
+	int retour;
+	retour=mon_strcmp(temp,chaine);
+	if (retour == 0)
+		printf("Les deux chaines %s et %s sont identiques\n", temp, chaine);
+	else
+		printf("Les deux chaines %s et %s sont différentes\n", temp, chaine);
+
+
+	mon_strcat(temp, chaine);
+	printf("On a bien concaténé ici le mot avec lui même : %s \n", temp);
+	
+
+	retour=mon_strcmp(temp,chaine);
+	if (retour == 0)
+		printf("Les deux chaines %s et %s sont identiques\n", temp, chaine);
+	else
+		printf("Les deux chaines %s et %s sont différentes\n", temp, chaine);
+	return 0;
+\end{lstlisting}
+
+\textbf{Exercice complémentaire}
+\begin{lstlisting}[numbers=left, firstnumber = 33 ]
+int mon_strcmp(char *chaine1, char *chaine2){
+	int i;
+	int rep = 0;
+	for(i = 0; chaine1[i]!= '\0' || chaine2[i]!= '\0' ;i++){
+		if (chaine1[i] != chaine2[i]){
+			if (chaine1[i] < chaine2[i])
+				rep = -1;
+			else 
+				rep = 1;
+			return rep;
+		}
+	}
+	return rep;
+\end{lstlisting}
+
+\subsection*{Fabriquer des phrases}
+
+[c] 
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP6]: cat phrases.c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+        char Sujet[50]="la petite souris" ;
+        char Verbe[50]="mange" ;
+        char Compl[50]="le gros chat" ;
+        char Phrase[150] ;
+
+        strcat(Phrase,Sujet);
+        strcat(Phrase, " ");
+        strcat(Phrase,Verbe);
+        strcat(Phrase, " ");
+        strcat(Phrase,Compl);
+        printf("%s\n", Phrase);
+        return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+[~/INF203/TP6]: clang -o phrases phrases.c ; ./phrases
+la petite souris mange le gros chat
+\end{lstlisting}
+
+[d]
+On compte les espaces pour compter les mots. Il ne faut pas oublier d'initier à 1 pour le premier mot de la phrase.
+
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP6]: cat phrases.c
+#include <stdio.h>
+#include <string.h>
+#include "bouts_de_phrases.c"
+#include "generer_entier.c"
+
+
+int nb_mots(char *Phrase){
+	int i,j = 1;
+	for (i=0; Phrase[i] != '\0'; i++){
+		if(Phrase[i] == ' ')
+			j++;
+	}
+	return j;
+}
+
+
+int main() {
+	char Sujet[50]="la petite souris" ;
+	char Verbe[50]="mange" ;
+	char Compl[50]="le gros chat" ;
+	char Phrase[150] ;
+	int res,i;
+
+	strcat(Phrase,Sujet);
+	strcat(Phrase, " ");
+	strcat(Phrase,Verbe);
+	strcat(Phrase, " ");
+	strcat(Phrase,Compl);
+	// printf("%s\n", Phrase);
+
+	for(i = 0; i < 3; i++){
+		Phrase[0] = '\0'; // reinitialise phrase
+		strcat(Phrase,sujet[generer_entier(11)]);
+		strcat(Phrase, " ");
+		strcat(Phrase,verbe[generer_entier(11)]);
+		strcat(Phrase, " ");
+		strcat(Phrase,complement[generer_entier(11)]);
+		printf("%s\n", Phrase);
+		res = nb_mots(Phrase);
+		printf("La phrase : %s contient %d mots\n", Phrase, res);
+	}
+	return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+[~/INF203/TP6]: clang -o phrases phrases.c ; ./phrases
+Guillaume H. détruit son steack-frites
+La phrase : Guillaume H. détruit son steack-frites contient 5 mots
+un inconnu avale bruyamment la fumee qui sort du clavier
+La phrase : un inconnu avale bruyamment la fumee qui sort du clavier contient 10 mots
+Oscar trouve enfin la fumee qui sort du clavier
+La phrase : Oscar trouve enfin la fumee qui sort du clavier contient 9 mots
+\end{lstlisting}
+
+
+[e]
+Cela n'aurait pas marché car on ne pointe pas joueur directement, il faut donc préciser (joueur* j) pour que cela fonctionne 
+correctement.
+
+
+[f]
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP6]: cat billes.c
+#include <stdio.h>
+#include <string.h>
+
+typedef struct {
+        char pseudo[20];
+        int nb_billes;
+} joueur;
+
+joueur atchoum = { "Atchoum", 42 };
+joueur dormeur = { "Dormeur", 25 };
+joueur grincheux = { "Grincheux", 3 };
+joueur joyeux = { "Joyeux", 100 };
+joueur prof = { "Prof", 2 };
+joueur simplet = { "Simplet", 0 };
+joueur timide = { "Timide", 12 };
+
+void afficher_joueur_V1(joueur j) {
+        printf("%s a %d billes\n", j.pseudo, j.nb_billes);
+}
+
+void afficher_joueur_V2(joueur* pj) {
+        printf("%s a %d billes\n", pj->pseudo, pj->nb_billes);
+}
+
+void lire_joueur(joueur* pj){
+        char t_pseudo[20] ;
+        int nbille ;
+        scanf("%19s", t_pseudo) ;
+        scanf("%d", &nbille) ;
+        strcpy(pj->pseudo,t_pseudo);
+        pj->nb_billes = nbille;
+}
+
+void transferer_V1(joueur j1, joueur j2, int nb){
+        j1.nb_billes = j1.nb_billes - nb;
+        j2.nb_billes = j2.nb_billes + nb;
+}
+
+void transferer_V2(joueur* j1, joueur* j2, int nb){
+        j1->nb_billes = j1->nb_billes - nb;
+        j2->nb_billes = j2->nb_billes + nb;
+}
+
+
+int main() {
+        afficher_joueur_V1(atchoum);
+        afficher_joueur_V2(&simplet);
+        lire_joueur(&simplet);
+        afficher_joueur_V2(&simplet);
+        printf("\nOn test transferer_V1 avec 10 billes\n");
+        transferer_V1(atchoum,simplet,10);
+        afficher_joueur_V2(&atchoum);
+        afficher_joueur_V2(&simplet);
+        printf("\nOn test transferer_V2 avec 10 billes\n");
+        transferer_V2(&atchoum,&simplet,10);
+        afficher_joueur_V2(&atchoum);
+        afficher_joueur_V2(&simplet);
+        return 0;
+}
+\end{lstlisting}
+
+
+\begin{lstlisting}
+[~/INF203/TP6]: clang -o billes billes.c ; ./billes
+Atchoum a 42 billes
+Simplet a 0 billes
+Roger
+1
+Roger a 1 billes
+
+On test transferer_V1 avec 10 billes
+Atchoum a 42 billes
+Roger a 1 billes
+
+On test transferer_V2 avec 10 billes
+Atchoum a 32 billes
+Roger a 11 billes
+\end{lstlisting}
+
+\newpage
+
+\subsection*{Commande de la semaine : \textbf{tr}}
+
+[g]
+\textit{On a pris la liberté de modifier légèrement exemple\_tr...}
+\begin{lstlisting}
+[~/INF203/TP6]: tr aeiou vwxyz < exemples_tr 
+Ww'rw ny strvngwrs ty lyvw
+Yyz knyw thw rzlws vnd sy dy I
+A fzll cymmxtmwnt's whvt I'm thxnkxng yf
+Yyz wyzldn't gwt thxs frym vny ythwr gzy
+
+I jzst wvnnv twll yyz hyw I'm fwwlxng
+Gyttv mvkw yyz zndwrstvnd
+
+Nwvwr gynnv gxvw yyz zp
+Nwvwr gynnv lwt yyz dywn
+Nwvwr gynnv rzn vryznd vnd dwswrt yyz
+Nwvwr gynnv mvkw yyz cry
+Nwvwr gynnv svy gyydbyw
+Nwvwr gynnv twll v lxw vnd hzrt yyz
+\end{lstlisting}
+
+La commande utilisée est:
+\begin{lstlisting}
+[~/INF203/TP6]: cat exemples_tr | tr -s '\n' > fich2 ; cat fich2
+We're no strangers to love
+You know the rules and so do I
+A full commitment's what I'm thinking of
+You wouldn't get this from any other guy
+I just wanna tell you how I'm feeling
+Gotta make you understand
+Never gonna give you up
+Never gonna let you down
+Never gonna run around and desert you
+Never gonna make you cry
+Never gonna say goodbye
+Never gonna tell a lie and hurt you
+\end{lstlisting}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Références
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+\cite{}
+%\subsection*{Bibliographie}
+\bibliographystyle{authordate1}
+\bibliography{ICU}
+
+\end{document}

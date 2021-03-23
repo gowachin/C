@@ -1,0 +1,511 @@
+\documentclass[12pt,a4paper,notitlepage,colorinlistoftodos]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Template pour rendus Master
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[utf8]{inputenc} %encodage
+\usepackage[T1]{fontenc}
+
+\usepackage[square,sort,comma,numbers]{natbib} % bibliography
+\setcitestyle{authoryear,open={(},close={)}}
+\renewcommand{\bibsection}{}
+
+\usepackage[french]{babel} % langue
+% add '\-' to create custom hypernation if a word is difficult to cut or :
+\hyphenation{geo-graphique}
+
+%mise en page générale
+\usepackage{geometry}
+%\geometry{a4paper} % format de feuille
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm} %marges
+\usepackage{mathptmx} % Police Times si compilateur pdfLatex
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{times}
+\setlength{\parindent}{0pt}
+
+\linespread{1} % interligne
+\usepackage{fancyhdr} %en tete et pied de page
+\usepackage{lastpage}  %marche pas chez julia
+\pagestyle{plain} 
+
+\usepackage{lscape} % page en landscape
+
+\usepackage{multicol}
+\usepackage{hhline}
+\setlength{\columnsep}{1cm}
+
+\usepackage{hyperref,url} % lien cliquables
+\hypersetup{
+colorlinks = true,
+linkcolor = black,
+urlcolor = RoyalBlue
+}
+\usepackage{lipsum} %Lorem ipsum
+
+\usepackage{wrapfig} %position d'images dans le texte
+\usepackage{graphicx, subcaption, setspace, booktabs, wrapfig}
+
+\usepackage[table,dvipsnames]{xcolor}
+
+\usepackage{caption}
+\DeclareCaptionType{annexe}[Annexe][Liste d'annexes] % rajout pour captions annexes
+\DeclareCaptionType{web}[Web][Sites Web] % rajout pour mettre des captions web
+
+\usepackage{todonotes} % notes et commentaires
+%\usepackage[disable]{todonotes} % pour supprimer les commentaires lors de la compil
+
+\usepackage[export]{adjustbox}
+
+\usepackage[para,online,flushleft]{threeparttable}
+
+
+\usepackage{listings}
+\usepackage{color}
+ 
+%http://latexcolor.com/ 
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{cerulean}{rgb}{0.0, 0.48, 0.65}
+\definecolor{beaublue}{rgb}{0.95, 0.95, 0.95}
+\definecolor{amber}{rgb}{1.0, 0.25, 0.0}
+\definecolor{indiagreen}{rgb}{0.07, 0.53, 0.03}
+\definecolor{number}{rgb}{0.01, 0.01, 0.01}
+
+
+\lstset{language=C}
+
+  \lstset{emphstyle=\color{blue},
+  inputencoding=latin1,
+  basicstyle=\footnotesize,
+  breaklines=true,
+  keywordstyle=\bf\color{amber},
+  commentstyle=\color{indiagreen},
+  stringstyle=\color{cerulean},
+  numberstyle=\color{number},
+  backgroundcolor=\color{beaublue},
+  morecomment=[s][\color{black}]{[}{]},
+  morecomment=[s][\color{cerulean}]{[~}{]:},
+  numbers=none,
+  numbersep=5pt,
+  lineskip=0.7pt,
+  columns=fullflexible, % was flexible before but it induce space in '/2entier' like '/2 entier'
+  showstringspaces=false ,
+  literate=%
+         {é}{{\'e}}1}
+        
+          \newcommand{\FSource}[1]{%
+          \lstinputlisting[texcl=true]{#1}
+          }
+
+%%%%%%%%%%%% skip an all paragraphe, between this bornes %%%%%%%%%%%%%%%%%%
+%\iffalse
+%\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% nouvelles commandes spécifique au doc %%%%%%%%%%%%%%%%%%
+
+\DeclareRobustCommand{\rchi}{{\mathpalette\irchi\relax}}
+\newcommand{\irchi}[2]{\raisebox{\depth}{$#1\chi$}}
+\renewcommand*\contentsname{Table des matières}
+\newcommand{\unit}[1]{\hfill\text{}[\mathrm{#1}]}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page de garde
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\begin{figure}
+    \begin{minipage}{.75\textwidth}
+    \begin{center}
+    {\Large INF203 : Compte-rendu TP5 \\ \textbf{C : types, tests, boucles, parcours de tableaux}}
+    \end{center}
+    %\vspace{\baselineskip}
+    %\setlength{\parskip}{\smallskipamount}
+    \rule{7em}{.4pt}\par
+     Alexandre Dupré, Maxime Jaunatre, Clément Raspail | INF - 3 \par 
+     %\href{mailto:\href{mailto:maxime.jaunatre@etu.univ-grenoble-alpes.fr}{Mail $^1$} | \today \par 
+     \href{mailto:alexandre.dupre@etu.univ-grenoble-alpes.fr,maxime.jaunatre@etu.univ-grenoble-alpes.fr, clement.raspail@etu.univ-grenoble-alpes.fr}{Mail} | \today
+\end{minipage}
+\end{figure}
+
+\hrule
+
+\section*{Syntaxe}
+
+\iffalse
+ Alexandre Dupré <alexandre.dupre@etu.univ-grenoble-alpes.fr>
+ Maxime Jaunatre <maxime.jaunatre@etu.univ-grenoble-alpes.fr> 
+ Clément Raspail <clement.raspail@etu.univ-grenoble-alpes.fr>
+\fi
+
+Pour ce compte rendu la syntaxe des commandes sera la suivante :
+\begin{lstlisting}
+[~chemin]: commande
+retour de la commande
+\end{lstlisting}
+
+Example :
+\begin{lstlisting}
+[~/INF203]: ls
+sauve_TP1   TP1   TP2
+\end{lstlisting}
+
+Si la commande est interactive et demande d'appuyer  sur entrée, une caractère '->' est indiqué.
+
+Les fichiers sont en \textit{italique} et les commandes (ou détails de retour de commande) en \textbf{gras}. Un script sera donc en gras quand il sera appelé comme une commande.
+
+
+Les fichiers sources en C sont compilés avec clang, et un nom est donné avec l'option \textbf{clang -o}. Cela implique que les programmes seront appelés par un autre nom que \textbf{a.out}.
+
+% #################################################################################################################################################################
+
+\section{Testons des entiers}
+
+
+[a] 
+\begin{lstlisting}
+[~/INF203/TP5]: clang -o exemple_generation exemple_generation.c
+[~/INF203/TP5]: ./exemple_generation
+J'ai genere l'entier 49
+[~/INF203/TP5]: ./exemple_generation
+J'ai genere l'entier 9
+[~/INF203/TP5]: ./exemple_generation
+J'ai genere l'entier 67
+\end{lstlisting}
+
+
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP5]: cat exemple_generation.c
+#include <stdio.h>
+#include "generer_entier.c"
+
+int main() {
+        long x = generer_entier(100);
+        printf("J'ai genere l'entier %ld\n", x);
+        if (x<42)
+                printf("Trop petit\n");
+        else if (x==42)
+                printf("Youpie\n");
+        else 
+                printf("Trop grand\n");
+        return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+[~/INF203/TP5]: clang -o exemple_generation exemple_generation.c
+[~/INF203/TP5]: ./exemple_generation
+J'ai genere l'entier 48
+Trop grand
+[~/INF203/TP5]: ./exemple_generation
+J'ai genere l'entier 6
+Trop petit
+[~/INF203/TP5]: ./exemple_generation
+J'ai genere l'entier 92
+Trop grand
+\end{lstlisting}
+
+
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP5]: cat exemple_generation.c
+#include <stdio.h>
+#include "generer_entier.c"
+
+int main() {
+        int n = 5;
+        int i;
+        long x;
+
+        for (i = 0; i < n; i++) {
+        x = generer_entier(100);
+        printf("J'ai genere l'entier %ld\n", x);
+        if (x<42)
+                printf("Trop petit\n");
+        else if (x==42)
+                printf("Youpie\n");
+        else 
+                printf("Trop grand\n");
+        }
+        return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+[~/INF203/TP5]: clang -o exemple_generation exemple_generation.c
+[~/INF203/TP5]: ./exemple_generation 
+J'ai genere l'entier 31
+Trop petit
+J'ai genere l'entier 33
+Trop petit
+J'ai genere l'entier 87
+Trop grand
+J'ai genere l'entier 57
+Trop grand
+J'ai genere l'entier 36
+Trop petit
+\end{lstlisting}
+
+\newpage
+\section{Provoquons un débordement}
+
+[b]
+La taille d'une variable \textbf{unsigned char} en bits est de [0;255] et fait 1 octet.
+On a une boucle while que l'on pensais infinie avant de tester, mais le débordement du type \textbf{unsigned char} permet de l'arreter. 
+
+\begin{lstlisting}
+[~/INF203/TP5]: clang -o deborde_char deborde_char.c 
+[~/INF203/TP5]: ./deborde_char 
+taille du type unsigned char : 1 octet(s)
+255 + 1 = 0 donc ...
+valeur maximum d'une variable de type unsigned char : 255
+\end{lstlisting}
+
+
+[c]
+La taille d'une variable \textbf{unsigned short} en bits est de [0;65535] et fait 2 octets.
+
+\begin{lstlisting}
+[~/INF203/TP5]: clang -o deborde_short deborde_short.c 
+[~/INF203/TP5]: ./deborde_short 
+taille du type unsigned short : 2 octet(s)
+65535 + 1 = 0 donc ...
+valeur maximum d'une variable de type unsigned short : 65535
+\end{lstlisting}
+
+
+[d]
+La taille d'une variable \textbf{unsigned int} en bits est de [0;4294967295] et fait 4 octets.
+
+\begin{lstlisting}
+[~/INF203/TP5]: clang -o deborde_int deborde_int.c 
+[~/INF203/TP5]: time ./deborde_int 
+taille du type unsigned int : 4 octet(s)
+4294967295 + 1 = 0 donc ...
+valeur maximum d'une variable de type unsigned int : 4294967295
+
+real    0m11,066s
+user    0m11,024s
+sys     0m0,001s
+\end{lstlisting}
+
+
+[e]
+Le temps obtenu pour la commande \textbf{time \textit{./deborde\_int}} est de 
+11.024s alors que pour \textbf{time \textit{./deborde\_short}} le temps est de 0.003s
+
+
+[f]
+On a essayé de calculer la relation entre les deux temps obtenus mais on obtient une erreur d'approximation d'environ 50\%. 
+Entre temps l'exécution d'un script avec long long tournais, et on l'a arrêté au bout de 20 minutes car on estimait que cela prendrait trop de temps.
+Nous n'avons pas réussis à estimer ce temps, mais il est vraisemblablement très long.
+
+\newpage
+\section{Rangeons !}
+
+\subsection{Affichages successifs}
+
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP5]: cat exemple_generation_tableau.c
+#include <stdio.h>
+#include "generer_entier.c"
+
+// affiche a l'écran T[0..nb-1]
+void afficher(long T[], int nb) {
+        int i;
+        printf("[ ");
+        for (i = 0; i < nb; i++) 
+                printf("%ld ", T[i]);
+        printf("]\n");
+}
+
+int main() {
+        int Taille = 20;
+        long T[Taille];
+        int i;
+        long valeur ;
+        // on initialise le tableau pour pas récuperer la mémoire précédente
+        for (i = 0; i < Taille; i++) 
+                T[i] = 0;
+        for (i = 0; i < Taille; i++) {
+                valeur = generer_entier(100) ;
+                T[i] = valeur ;
+                afficher(T, Taille);
+        }
+        return 0;
+}
+\end{lstlisting}
+
+
+\begin{lstlisting}
+[~/INF203/TP5]: clang -o exemple_generation_tableau exemple_generation_tableau.c
+[~/INF203/TP5]: ./exemple_generation_tableau 
+[ 55 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 55 51 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 55 51 49 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 55 51 49 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 55 51 49 32 67 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 55 51 49 32 67 52 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 55 51 49 32 67 52 60 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 55 51 49 32 67 52 60 85 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 55 51 49 32 67 52 60 85 99 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 55 51 49 32 67 52 60 85 99 90 0 0 0 0 0 0 0 0 0 0 ]
+[ 55 51 49 32 67 52 60 85 99 90 69 0 0 0 0 0 0 0 0 0 ]
+[ 55 51 49 32 67 52 60 85 99 90 69 37 0 0 0 0 0 0 0 0 ]
+[ 55 51 49 32 67 52 60 85 99 90 69 37 29 0 0 0 0 0 0 0 ]
+[ 55 51 49 32 67 52 60 85 99 90 69 37 29 49 0 0 0 0 0 0 ]
+[ 55 51 49 32 67 52 60 85 99 90 69 37 29 49 57 0 0 0 0 0 ]
+[ 55 51 49 32 67 52 60 85 99 90 69 37 29 49 57 23 0 0 0 0 ]
+[ 55 51 49 32 67 52 60 85 99 90 69 37 29 49 57 23 93 0 0 0 ]
+[ 55 51 49 32 67 52 60 85 99 90 69 37 29 49 57 23 93 40 0 0 ]
+[ 55 51 49 32 67 52 60 85 99 90 69 37 29 49 57 23 93 40 52 0 ]
+[ 55 51 49 32 67 52 60 85 99 90 69 37 29 49 57 23 93 40 52 15 ]  
+\end{lstlisting}
+
+\newpage
+\subsection{Tri du tableau à la volée}
+
+[g]
+On appel la fonction \textit{inserer} avec en parametre T, i et valeur
+
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP5]: cat #include <stdio.h>
+#include "generer_entier.c"
+
+// affiche a l'écran T[0..nb-1]
+void afficher(long T[], int nb) {
+        int i;
+        printf("[ ");
+        for (i = 0; i < nb; i++) {
+                printf("%ld ", T[i]);
+        }
+        printf("]\n");
+}
+
+void echanger(long Tab[], int i, int j) {
+        long tmp;
+        tmp = Tab[i];
+        Tab[i] = Tab[j];
+        Tab[j] = tmp;
+}
+
+/* inserer a sa place l'entier val dans la sequence triee Tab[0..nb-1] */
+void inserer(long Tab[], int nb, int val){
+        Tab[nb] = val;
+        int i = 0;
+        while (Tab[nb - 1 - i ] > Tab[nb - i] && nb - i > 0)
+        {
+                echanger(Tab, nb - i, nb - 1 - i);
+                i++; 
+        }
+        
+}
+
+int main() {
+        int Taille = 20;
+        long T[Taille];
+        int i;
+        long valeur ;
+        // on initialise le tableau pour pas récuperer la mémoire précédente
+        for (i = 0; i < Taille; i++) 
+                T[i] = 0;
+
+        for (i = 0; i < Taille; i++) {
+                valeur = generer_entier(100) ;
+                inserer(T,i,valeur) ; // T[i] = valeur;
+                afficher(T, Taille);
+        }
+        return 0;
+}
+\end{lstlisting}
+        
+\newpage        
+\begin{lstlisting}
+[~/INF203/TP5]: clang -o exemple_generation_tableau exemple_generation_tableau.c
+[~/INF203/TP5]: ./exemple_generation_tableau 
+[ 19 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 19 50 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 19 50 56 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 19 50 56 72 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 19 50 55 56 72 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 19 50 55 56 72 80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 19 50 55 56 72 80 87 0 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 19 24 50 55 56 72 80 87 0 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 19 24 50 55 56 58 72 80 87 0 0 0 0 0 0 0 0 0 0 0 ]
+[ 19 24 50 55 56 58 72 80 81 87 0 0 0 0 0 0 0 0 0 0 ]
+[ 19 24 50 55 56 58 72 80 81 87 97 0 0 0 0 0 0 0 0 0 ]
+[ 19 24 39 50 55 56 58 72 80 81 87 97 0 0 0 0 0 0 0 0 ]
+[ 19 24 39 46 50 55 56 58 72 80 81 87 97 0 0 0 0 0 0 0 ]
+[ 19 24 39 46 50 55 56 58 72 80 81 87 97 99 0 0 0 0 0 0 ]
+[ 19 24 39 46 50 55 56 58 64 72 80 81 87 97 99 0 0 0 0 0 ]
+[ 19 24 39 46 50 55 56 58 64 72 80 81 86 87 97 99 0 0 0 0 ]
+[ 19 24 38 39 46 50 55 56 58 64 72 80 81 86 87 97 99 0 0 0 ]
+[ 19 24 38 39 46 50 53 55 56 58 64 72 80 81 86 87 97 99 0 0 ]
+[ 19 24 38 39 46 47 50 53 55 56 58 64 72 80 81 86 87 97 99 0 ]
+[ 19 24 38 39 46 47 50 53 55 56 58 64 72 80 81 86 87 97 97 99 ]
+\end{lstlisting}
+
+
+\subsection{Les commandes de la semaine : head et tail}
+
+[h]
+\textbf{tail -n 4} renverra les 4 derniere ligne au lieu des 10 alors que
+\textbf{tail -n +4} renverra toute les lignes a partir de la ligne 4.
+
+[i]
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP5]: cat ligne_par_4.sh
+#!/bin/bash
+
+ligne=$(wc -l $1 | cut -d' ' -f1)
+nb=$(expr $ligne / 4 )
+
+i=0
+while [ $i -lt $nb ]
+do
+    numligne=$( expr $i \* 4 + 1 )
+    tail -n +$numligne $1 | head -n 4
+    echo ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"
+    i=$(expr $i + 1 )
+done
+
+numligne=$( expr $i \* 4 + 1 )
+tail -n +$numligne $1 | head -n 4
+echo ''
+\end{lstlisting}
+
+\newpage
+\begin{lstlisting}
+[~/INF203/TP5]: chmod u+x ligne_par_4.sh
+[~/INF203/TP5]: ./ligne_par_4.sh deborde_char.c
+#include <stdio.h>
+#include <stdlib.h>
+
+
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+int main() {
+        unsigned char courant = 0, prochain = 1;
+
+        printf("taille du type unsigned char : %ld octet(s)\n", sizeof(unsigned char));
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+        while (prochain > courant) {
+                courant = prochain;
+                prochain = prochain + 1;
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+        }
+
+        printf("%u + 1 = %u donc ...\n", courant, prochain);
+        printf("valeur maximum d'une variable de type unsigned char : %u\n", courant);
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+        return 0;
+}
+\end{lstlisting}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Références
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+\cite{}
+%\subsection*{Bibliographie}
+\bibliographystyle{authordate1}
+\bibliography{ICU}
+
+\end{document}

@@ -1,0 +1,407 @@
+\documentclass[12pt,a4paper,notitlepage,colorinlistoftodos]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Template pour rendus Master
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[utf8]{inputenc} %encodage
+\usepackage[T1]{fontenc}
+
+\usepackage[square,sort,comma,numbers]{natbib} % bibliography
+\setcitestyle{authoryear,open={(},close={)}}
+\renewcommand{\bibsection}{}
+
+\usepackage[french]{babel} % langue
+% add '\-' to create custom hypernation if a word is difficult to cut or :
+\hyphenation{geo-graphique}
+
+%mise en page générale
+\usepackage{geometry}
+%\geometry{a4paper} % format de feuille
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm} %marges
+\usepackage{mathptmx} % Police Times si compilateur pdfLatex
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{times}
+\setlength{\parindent}{0pt}
+
+\linespread{1} % interligne
+\usepackage{fancyhdr} %en tete et pied de page
+\usepackage{lastpage}  %marche pas chez julia
+\pagestyle{plain} 
+
+\usepackage{lscape} % page en landscape
+
+\usepackage{multicol}
+\usepackage{hhline}
+\setlength{\columnsep}{1cm}
+
+\usepackage{hyperref,url} % lien cliquables
+\hypersetup{
+colorlinks = true,
+linkcolor = black,
+urlcolor = RoyalBlue
+}
+\usepackage{lipsum} %Lorem ipsum
+
+\usepackage{wrapfig} %position d'images dans le texte
+\usepackage{graphicx, subcaption, setspace, booktabs, wrapfig}
+
+\usepackage[table,dvipsnames]{xcolor}
+
+\usepackage{caption}
+\DeclareCaptionType{annexe}[Annexe][Liste d'annexes] % rajout pour captions annexes
+\DeclareCaptionType{web}[Web][Sites Web] % rajout pour mettre des captions web
+
+\usepackage{todonotes} % notes et commentaires
+%\usepackage[disable]{todonotes} % pour supprimer les commentaires lors de la compil
+
+\usepackage[export]{adjustbox}
+
+\usepackage[para,online,flushleft]{threeparttable}
+
+
+\usepackage{listings}
+\usepackage{color}
+ 
+%http://latexcolor.com/ 
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{cerulean}{rgb}{0.0, 0.48, 0.65}
+\definecolor{beaublue}{rgb}{0.95, 0.95, 0.95}
+\definecolor{amber}{rgb}{1.0, 0.25, 0.0}
+\definecolor{indiagreen}{rgb}{0.07, 0.53, 0.03}
+\definecolor{number}{rgb}{0.01, 0.01, 0.01}
+
+
+\lstset{language=C}
+
+  \lstset{emphstyle=\color{blue},
+  inputencoding=latin1,
+  basicstyle=\footnotesize,
+  breaklines=true,
+  keywordstyle=\bf\color{amber},
+  commentstyle=\color{indiagreen},
+  stringstyle=\color{cerulean},
+  numberstyle=\color{number},
+  backgroundcolor=\color{beaublue},
+  morecomment=[s][\color{black}]{[}{]},
+  morecomment=[s][\color{cerulean}]{[~}{]:},
+  numbers=none,
+  numbersep=5pt,
+  lineskip=0.7pt,
+  columns=fullflexible, % was flexible before but it induce space in '/2entier' like '/2 entier'
+  showstringspaces=false ,
+  literate=%
+         {é}{{\'e}}1}
+        
+          \newcommand{\FSource}[1]{%
+          \lstinputlisting[texcl=true]{#1}
+          }
+
+%%%%%%%%%%%% skip an all paragraphe, between this bornes %%%%%%%%%%%%%%%%%%
+%\iffalse
+%\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% nouvelles commandes spécifique au doc %%%%%%%%%%%%%%%%%%
+
+\DeclareRobustCommand{\rchi}{{\mathpalette\irchi\relax}}
+\newcommand{\irchi}[2]{\raisebox{\depth}{$#1\chi$}}
+\renewcommand*\contentsname{Table des matières}
+\newcommand{\unit}[1]{\hfill\text{}[\mathrm{#1}]}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page de garde
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\begin{figure}
+    \begin{minipage}{.75\textwidth}
+    \begin{center}
+    {\Large INF203 : Compte-rendu TP7 \\ \textbf{Arguments de la ligne de commande et C
+Entrées-sorties fichiers - Fichiers standard}}
+    \end{center}
+    %\vspace{\baselineskip}
+    %\setlength{\parskip}{\smallskipamount}
+    \rule{7em}{.4pt}\par
+     Alexandre Dupré, Maxime Jaunatre, Clément Raspail | INF - 3 \par 
+     %\href{mailto:\href{mailto:maxime.jaunatre@etu.univ-grenoble-alpes.fr}{Mail $^1$} | \today \par 
+     \href{mailto:alexandre.dupre@etu.univ-grenoble-alpes.fr,maxime.jaunatre@etu.univ-grenoble-alpes.fr, clement.raspail@etu.univ-grenoble-alpes.fr}{Mail} | \today
+\end{minipage}
+\end{figure}
+
+\hrule
+
+\section*{Syntaxe}
+
+\iffalse
+ Alexandre Dupré <alexandre.dupre@etu.univ-grenoble-alpes.fr>
+ Maxime Jaunatre <maxime.jaunatre@etu.univ-grenoble-alpes.fr> 
+ Clément Raspail <clement.raspail@etu.univ-grenoble-alpes.fr>
+\fi
+
+Pour ce compte rendu la syntaxe des commandes sera la suivante :
+\begin{lstlisting}
+[~chemin]: commande
+retour de la commande
+\end{lstlisting}
+
+Example :
+\begin{lstlisting}
+[~/INF203]: ls
+sauve_TP1   TP1   TP2
+\end{lstlisting}
+
+Si la commande est interactive et demande d'appuyer  sur entrée, une caractère '->' est indiqué.
+
+Les fichiers sont en \textit{italique} et les commandes (ou détails de retour de commande) en \textbf{gras}. Un script sera donc en gras quand il sera appelé comme une commande.
+
+
+Les fichiers sources en C sont compilés avec clang, et un nom est donné avec l'option \textbf{clang -o}. Cela implique que les programmes seront appelés par un autre nom que \textbf{a.out}.
+
+% #################################################################################################################################################################
+
+\subsection*{Pour s'échauffer : quelques gammes avec des chaînes de caractères}
+
+
+[a] 
+\textbf{argc} represente le \$\# de shell + 1 soit le nombre d'agument donné en parametre, plus le nom du fichier.
+
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP7]: cat somme.c
+#include<stdio.h>
+
+// print arguments with + between and = at the end of the printf
+int main (int argc, char *argv[]) {
+  int i ;
+  for (i=1 ; i<argc ; i++){
+    printf("%s ", argv[i]) ;
+    if(i != argc-1)
+      printf("+ ");
+  }
+  printf("=");
+  printf("\n");
+  return 0;
+}
+\end{lstlisting}
+
+
+[b]
+Quand on ne met pas d'argument la commande renvoie un egale car on l'affiche a la fin de la boucle donc tout le temps.
+
+[c]
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP7]: cat somme.c
+#include<stdio.h>
+
+int char2int(char c[]){
+  int val = 0;
+  val = val + c[0] - '0';
+  for(int i = 1 ; c[i] != '\0' ; i++){
+        val = val * 10 + (c[i] - '0');
+    }
+  return val;
+}
+
+int main (int argc, char *argv[]) {
+  int i ;
+  int s = 0 ;
+  for (i=1 ; i<argc ; i++){
+    s = s + char2int(argv[i]);
+    printf("%s ", argv[i]) ;
+    if(i != argc-1)
+      printf("+ ");
+  }
+  printf("= %d", s);
+  printf("\n");
+  return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+[~/INF203/TP7]: clang -o somme somme.c ; ./somme 29 10
+29 + 10 = 39
+[~/INF203/TP7]: clang -o somme somme.c ; ./somme 
+= 0
+\end{lstlisting}
+
+
+[d] [e]
+\begin{lstlisting}
+[~/INF203/TP7]: clang -o mes_entrees_sorties mes_entrees_sorties.c
+[~/INF203/TP7]: ./mes_entrees_sorties Candide_chapitre1.txt truc.txt
+Rentrez un nombre correct d'arguments
+[~/INF203/TP7]: ./mes_entrees_sorties truc.txt
+truc.txt n'a pas pu être ouvert en lecture
+[~/INF203/TP7]: ls -l Candide_chapitre1.txt 
+-rw-r--r-- 1 maxime maxime 4992 mars  23 09:01 Candide_chapitre1.txt
+[~/INF203/TP7]: chmod u-r Candide_chapitre1.txt 
+[~/INF203/TP7]: ls -l Candide_chapitre1.txt 
+--w-r--r-- 1 maxime maxime 4992 mars  23 09:01 Candide_chapitre1.txt
+[~/INF203/TP7]: clang -o mes_entrees_sorties mes_entrees_sorties.c ; ./mes_entrees_sorties Candide_chapitre1.txt 
+Candide_chapitre1.txt n'a pas pu être ouvert en lecture
+\end{lstlisting}
+
+
+[f]
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP7]: cat mes_entrees_sorties.c
+#include <stdio.h>
+
+int main (int argc, char *argv[]) {
+	FILE *f ;
+	FILE *g ;
+	char c ;
+	if(argc == 2){
+		f = fopen(argv[1], "r") ;
+		if (f == NULL) {
+			printf("%s n'a pas pu être ouvert en lecture\n", argv[1]) ;
+		return 2 ;
+		}
+	
+		fscanf(f, "%c", &c) ;
+		while (!feof(f)) {
+			printf("%c", c) ;	
+			fscanf(f, "%c", &c) ;
+		}
+		printf("\n");
+	} else if (argc == 3) {
+		f = fopen(argv[1], "r") ;
+		g = fopen(argv[2], "a") ;
+		if (f == NULL) {
+			printf("%s n'a pas pu être ouvert en lecture\n", argv[1]) ;
+			return 2 ;
+		}
+		if (g == NULL) {
+			printf("%s n'a pas pu être ouvert en lecture\n", argv[2]) ;
+			return 2 ;
+		}
+		fprintf(g, "%c", '\n');
+		fscanf(f, "%c", &c);
+		while (!feof(f)) {
+			fprintf(g,"%c", c) ;	
+			fscanf(f, "%c", &c) ;
+		}
+
+	} else { 
+		printf("Rentrez un nombre correct d'arguments (1) \n");
+		return 1 ;
+	}
+	fclose(f) ;
+	return 0 ;
+}
+\end{lstlisting}
+
+[g] [h]
+\textbf{cat *.c} affiche dans le terminal le contenu de tout les fichiers dont l'extention est \textit{.c}.
+\textbf{cat} sans arguments entre dans une boucle while attendant une entrée standard pour l'afficher dans le terminal après. 
+Il faut entrer la combinaison de touches \textit{ctrl-d} pour sortir de cette boucle.
+
+[i]
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP7]: ./mon_cat mon_cat.c
+#include <stdio.h>
+
+int main (int argc, char *argv[]) {
+	FILE *f ;
+	char c ;
+	int i ;
+	if (argc == 1){
+		char c;
+		fscanf(stdin, "%s", &c);
+		while( !feof(stdin)){
+			printf("%s\n", &c);
+			fscanf(stdin, "%s", &c);
+		}
+		return 0;
+	}
+
+	for(i = 1; i <argc ; i++ ){
+		//printf("l'argument numero %d est %s\n",i, argv[i]) ;
+		f = fopen(argv[i], "r") ;
+		if (f == NULL) {
+			printf("%s n'a pas pu être ouvert en lecture\n", argv[i]) ;
+		return 2 ;
+		}
+	
+		fscanf(f, "%c", &c) ;
+		while (!feof(f)) {
+			printf("%c", c) ;	
+			fscanf(f, "%c", &c) ;
+		}
+		printf("\n");
+		fclose(f) ;
+	} 
+	return 0 ;
+}
+\end{lstlisting}
+
+
+[j]
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP7]: cat occurences.c
+#include <stdio.h>
+
+int main(int argc, char *argv[]){
+    FILE* f;
+    int list[128];
+    char c;
+    // init list to 0
+    for (int i = 0; i < 128; i++){
+        list[i] = 0;
+    }
+    // open file
+    f = fopen( argv[1], "r");
+    if ( f == NULL){
+        printf("Rentrez un nom de ficher");
+        return 1;
+    }
+    // scan file
+    fscanf(f, "%c", &c);
+    list[c]++;
+    while(!feof(f)){
+        fscanf(f, "%c", &c);
+        list[c]++;
+    }
+    // print value
+    for (int i = 32; i < 127; i++){ 
+        // on évite les caractères spéciaux (saut de ligne) et DEL
+        if(list[i] > 0){
+            printf("Il y a %d occurences du caractère '%c'\n", list[i], i);
+        }
+    }
+    
+    return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+[~/INF203/TP7]: ./mon_cat test.txt 
+Never gonna give you up
+Never let you down
+[~/INF203/TP7]: ./occurences test.txt 
+Il y a 7 occurences du caractère ' '
+Il y a 2 occurences du caractère 'N'
+Il y a 1 occurences du caractère 'a'
+Il y a 1 occurences du caractère 'd'
+Il y a 6 occurences du caractère 'e'
+Il y a 2 occurences du caractère 'g'
+Il y a 1 occurences du caractère 'i'
+Il y a 1 occurences du caractère 'l'
+Il y a 4 occurences du caractère 'n'
+Il y a 4 occurences du caractère 'o'
+Il y a 1 occurences du caractère 'p'
+Il y a 2 occurences du caractère 'r'
+Il y a 1 occurences du caractère 't'
+Il y a 3 occurences du caractère 'u'
+Il y a 3 occurences du caractère 'v'
+Il y a 1 occurences du caractère 'w'
+Il y a 2 occurences du caractère 'y'
+\end{lstlisting}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Références
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+\cite{}
+%\subsection*{Bibliographie}
+\bibliographystyle{authordate1}
+\bibliography{ICU}
+
+\end{document}
