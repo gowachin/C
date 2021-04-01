@@ -1,0 +1,375 @@
+\documentclass[12pt,a4paper,notitlepage,colorinlistoftodos]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Template pour rendus Master
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[utf8]{inputenc} %encodage
+\usepackage[T1]{fontenc}
+
+\usepackage[square,sort,comma,numbers]{natbib} % bibliography
+\setcitestyle{authoryear,open={(},close={)}}
+\renewcommand{\bibsection}{}
+
+\usepackage[french]{babel} % langue
+% add '\-' to create custom hypernation if a word is difficult to cut or :
+\hyphenation{geo-graphique}
+
+%mise en page générale
+\usepackage{geometry}
+%\geometry{a4paper} % format de feuille
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm} %marges
+\usepackage{mathptmx} % Police Times si compilateur pdfLatex
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{times}
+\setlength{\parindent}{0pt}
+
+\linespread{1} % interligne
+\usepackage{fancyhdr} %en tete et pied de page
+\usepackage{lastpage}  %marche pas chez julia
+\pagestyle{plain} 
+
+\usepackage{lscape} % page en landscape
+
+\usepackage{multicol}
+\usepackage{hhline}
+\setlength{\columnsep}{1cm}
+
+\usepackage{hyperref,url} % lien cliquables
+\hypersetup{
+colorlinks = true,
+linkcolor = black,
+urlcolor = RoyalBlue
+}
+\usepackage{lipsum} %Lorem ipsum
+
+\usepackage{wrapfig} %position d'images dans le texte
+\usepackage{graphicx, subcaption, setspace, booktabs, wrapfig}
+
+\usepackage[table,dvipsnames]{xcolor}
+
+\usepackage{caption}
+\DeclareCaptionType{annexe}[Annexe][Liste d'annexes] % rajout pour captions annexes
+\DeclareCaptionType{web}[Web][Sites Web] % rajout pour mettre des captions web
+
+\usepackage{todonotes} % notes et commentaires
+%\usepackage[disable]{todonotes} % pour supprimer les commentaires lors de la compil
+
+\usepackage[export]{adjustbox}
+
+\usepackage[para,online,flushleft]{threeparttable}
+
+
+\usepackage{listings}
+\usepackage{color}
+ 
+%http://latexcolor.com/ 
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{cerulean}{rgb}{0.0, 0.48, 0.65}
+\definecolor{beaublue}{rgb}{0.95, 0.95, 0.95}
+\definecolor{amber}{rgb}{1.0, 0.25, 0.0}
+\definecolor{indiagreen}{rgb}{0.07, 0.53, 0.03}
+\definecolor{number}{rgb}{0.01, 0.01, 0.01}
+
+
+\lstset{language=C}
+
+  \lstset{emphstyle=\color{blue},
+  inputencoding=latin1,
+  basicstyle=\footnotesize,
+  breaklines=true,
+  keywordstyle=\bf\color{amber},
+  commentstyle=\color{indiagreen},
+  stringstyle=\color{cerulean},
+  numberstyle=\color{number},
+  backgroundcolor=\color{beaublue},
+  morecomment=[s][\color{black}]{[}{]},
+  morecomment=[s][\color{cerulean}]{[~}{]:},
+  numbers=none,
+  numbersep=5pt,
+  lineskip=0.7pt,
+  columns=fullflexible, % was flexible before but it induce space in '/2entier' like '/2 entier'
+  showstringspaces=false ,
+  literate=%
+         {é}{{\'e}}1}
+        
+          \newcommand{\FSource}[1]{%
+          \lstinputlisting[texcl=true]{#1}
+          }
+
+%%%%%%%%%%%% skip an all paragraphe, between this bornes %%%%%%%%%%%%%%%%%%
+%\iffalse
+%\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% nouvelles commandes spécifique au doc %%%%%%%%%%%%%%%%%%
+
+\DeclareRobustCommand{\rchi}{{\mathpalette\irchi\relax}}
+\newcommand{\irchi}[2]{\raisebox{\depth}{$#1\chi$}}
+\renewcommand*\contentsname{Table des matières}
+\newcommand{\unit}[1]{\hfill\text{}[\mathrm{#1}]}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page de garde
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\begin{figure}
+    \begin{minipage}{.75\textwidth}
+    \begin{center}
+    {\Large INF203 : Compte-rendu TP8 \\ \textbf{Unités de compilation en C}}
+    \end{center}
+    %\vspace{\baselineskip}
+    %\setlength{\parskip}{\smallskipamount}
+    \rule{7em}{.4pt}\par
+     Alexandre Dupré, Maxime Jaunatre, Clément Raspail | INF - 3 \par 
+     %\href{mailto:\href{mailto:maxime.jaunatre@etu.univ-grenoble-alpes.fr}{Mail $^1$} | \today \par 
+     \href{mailto:alexandre.dupre@etu.univ-grenoble-alpes.fr,maxime.jaunatre@etu.univ-grenoble-alpes.fr, clement.raspail@etu.univ-grenoble-alpes.fr}{Mail} | \today
+\end{minipage}
+\end{figure}
+
+\hrule
+
+\section*{Syntaxe}
+
+\iffalse
+ Alexandre Dupré <alexandre.dupre@etu.univ-grenoble-alpes.fr>
+ Maxime Jaunatre <maxime.jaunatre@etu.univ-grenoble-alpes.fr> 
+ Clément Raspail <clement.raspail@etu.univ-grenoble-alpes.fr>
+\fi
+
+Pour ce compte rendu la syntaxe des commandes sera la suivante :
+\begin{lstlisting}
+[~chemin]: commande
+retour de la commande
+\end{lstlisting}
+
+Example :
+\begin{lstlisting}
+[~/INF203]: ls
+sauve_TP1   TP1   TP2
+\end{lstlisting}
+
+Si la commande est interactive et demande d'appuyer  sur entrée, une caractère '->' est indiqué.
+
+Les fichiers sont en \textit{italique} et les commandes (ou détails de retour de commande) en \textbf{gras}. Un script sera donc en gras quand il sera appelé comme une commande.
+
+
+Les fichiers sources en C sont compilés avec clang, et un nom est donné avec l'option \textbf{clang -o}. Cela implique que les programmes seront appelés par un autre nom que \textbf{a.out}.
+
+% #################################################################################################################################################################
+
+\subsection*{Gestion de l’ensemble des joueurs}
+
+
+[a]
+Le nom du type représentant un ensemble de joueurs et \textbf{joueurs}.
+Les joueurs sont representés sous forme d'un tableau qui regroupe tout les joueurs avec leurs nombres de billes.
+Le cardinal maximal du nombre de joueur est 100 et la taille maximum du nom d'un joueur est de 32.
+
+
+[b]
+\begin{lstlisting}
+[~/INF203/TP8]: clang billes.c joueurs.c generer_entier.c
+[~/INF203/TP8]: ./a.out essai bob
+Copie successive des arguments dans l'ensemble :
+ essai - bob -
+Ensemble de joueurs dans lequel la recherche est faite :
+{ }
+Qui voulez-vous ? essai
+-- Joueur absent de l'ensemble
+Qui voulez-vous ? bob 
+-- Joueur absent de l'ensemble
+Qui voulez-vous ? q
+\end{lstlisting}
+
+On note qu'on ne peut pas compiler plusieurs fichier et spécifier le nom de sortie avec l'option \textbf{-o}.
+
+\newpage
+[c]
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP8]: cat joueurs.c
+#include <string.h>
+#include <stdio.h>
+#include "joueurs.h"
+
+void init_joueurs(joueurs *ens){
+  ens->nb = 0;
+}
+
+int ajouter_joueur(joueurs *ens, char *nom, int billes) {
+  int nb = ens->nb;
+  int place = trouver_joueur(ens, nom);
+
+  if (place == -1) {
+    strcpy(ens->T[nb].pseudo, nom);
+    ens->T[nb].nb_billes = billes;
+    ens->nb++;
+  } else {
+    nb = place;
+  }
+  return nb;
+}
+
+int nombre_joueurs(joueurs *ens) {
+  return ens->nb;
+}
+
+char *nom_joueur(joueurs *ens, int i) {
+  if (i < ens->nb){
+    return ens->T[i].pseudo;
+  }
+  else
+    return NULL;
+}
+
+int billes_joueur(joueurs *ens, int i) {
+  if (i < ens->nb){
+    return ens->T[i].nb_billes;
+  }
+  else
+    return 0;
+}
+
+int trouver_joueur(joueurs *ens, char *nom) {
+  int test = -1;
+  for (int i = 0; i < ens->nb && test == -1; i++){
+    if (!strcmp(nom, ens->T[i].pseudo)){
+      test = i;
+    }
+  }
+  return test;
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+[~/INF203/TP8]: clang -obille billes.c joueurs.c generer_entier.c
+[~/INF203/TP8]: ./bille gizmo stripe mugger flasher bogart stripe
+Copie successive des arguments dans l'ensemble :
+ gizmo - stripe - mugger - flasher - bogart - stripe -
+Ensemble de joueurs dans lequel la recherche est faite :
+{ gizmo 402 stripe 223 mugger 350 flasher 90 bogart 67 }
+Qui voulez-vous ? gizmo
+402
+Qui voulez-vous ? stripe
+223
+Qui voulez-vous ? mogway
+-- Joueur absent de l'ensemble
+Qui voulez-vous ? q
+\end{lstlisting}
+
+
+[d]
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP8]: cat joueurs_out.c
+#include <stdio.h>
+#include <string.h>
+#include "joueurs.h"
+
+void ecrire_les_joueurs(joueurs *ens, char *nom_fich){
+    FILE *f;
+    f = fopen(nom_fich, "w");
+
+    //write number
+    fprintf(f, "%d\n", ens->nb);
+    //write players
+    for (int i = 0; i < ens->nb; i++){
+        for(int ii = 0; ens->T[i].pseudo[ii] != '\0'; ii++){
+            fprintf(f, "%c", ens->T[i].pseudo[ii]);
+        }
+        fprintf(f, " %d\n", ens->T[i].nb_billes);
+    }
+    fclose(f);
+}
+\end{lstlisting}
+
+[e]
+\begin{lstlisting}
+[~/INF203/TP8]: tail -n 3 billes.c
+    ecrire_les_joueurs(&ens_joueurs, "gremlins.txt");
+    return 0;
+}
+[~/INF203/TP8]: clang -obille billes.c joueurs.c generer_entier.c joueurs_out.c
+[~/INF203/TP8]: ./bille gizmo stripe
+Copie successive des arguments dans l'ensemble :
+ gizmo - stripe -
+Ensemble de joueurs dans lequel la recherche est faite :
+{ gizmo 479 stripe 204 }
+Qui voulez-vous ? bob
+-- Joueur absent de l'ensemble
+Qui voulez-vous ? gizmo
+479
+Qui voulez-vous ? q
+[~/INF203/TP8]: cat gremlins.txt 
+2
+gizmo 479
+stripe 204
+\end{lstlisting}
+
+Il serait possible de prendre le dernier argument de la commande \textbf{billes} pour donner le nom de fichier. 
+
+[f]
+\textit{Etant donné que l'on a enregistré les joueurs dans gremlins.txt, on charge ce fichier.}
+\begin{lstlisting}[numbers=left, firstnumber = 0 ]
+[~/INF203/TP8]: cat joueurs_in.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "joueurs.h"
+#include "joueurs_in.h"
+
+joueurs lire_les_joueurs(char *nom_fich){
+    FILE *f;
+    f = fopen(nom_fich, "r");
+    joueurs ens;
+    char nb_string[3] = "";
+    char c;
+    char nb_j[32] = "";
+    char nb_bille[4] = "";
+    int nb;
+
+    //init
+    init_joueurs(&ens); 
+
+    // lecture-ecriture des joueurs
+    fscanf(f, "%c", &c);
+    while (c!='\n') {	
+        strncat(nb_string, &c,1);
+        fscanf(f, "%c", &c) ;   
+    }
+    nb = atoi(nb_string);
+    printf("string : %d\n", nb);
+    
+    for(int i = 0; i < nb ; i++){
+        // noms des joueurs
+        strcpy(nb_j, "");
+        fscanf(f, "%c", &c);
+        while (c!=' ') {	
+            strncat(nb_j, &c,1);
+            fscanf(f, "%c", &c) ;   
+        }
+        // nb billes joueurs
+        strcpy(nb_bille, "");
+        fscanf(f, "%c", &c);
+        while (c!='\n' && !feof(f)) {	
+            strncat(nb_bille, &c,1);
+            fscanf(f, "%c", &c) ;   
+        }
+        ajouter_joueur(&ens, nb_j, atoi(nb_bille));
+    }
+    
+    fclose(f);
+    return ens;
+}
+\end{lstlisting}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Références
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+\cite{}
+%\subsection*{Bibliographie}
+\bibliographystyle{authordate1}
+\bibliography{ICU}
+
+\end{document}
