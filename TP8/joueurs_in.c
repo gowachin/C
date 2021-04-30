@@ -25,7 +25,6 @@ joueurs lire_les_joueurs(char *nom_fich){
         fscanf(f, "%c", &c) ;   
     }
     nb = atoi(nb_string);
-    printf("string : %d\n", nb);
     
     for(int i = 0; i < nb ; i++){
         // noms des joueurs

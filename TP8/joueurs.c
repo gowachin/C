@@ -50,11 +50,12 @@ int trouver_joueur(joueurs *ens, char *nom) {
   return test;
 }
 
-void modifier_billes(joueurs *ens, int i, int cpt) {
-}
-
 void afficher_ensemble_joueurs(joueurs *ens) {
     int i ;
     for (i=0 ; i<ens->nb ; i++) 
       printf("%s %d\n", ens->T[i].pseudo, ens->T[i].nb_billes) ;
+}
+
+void modifier_billes(joueurs *ens, int i, int cpt) {
+  ens->T[i].nb_billes = cpt;
 }

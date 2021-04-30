@@ -14,7 +14,7 @@ int main (int argc, char *argv[]) {
          printf("syntaxe : %s fich_joueurs_entree fich_joueurs_sortie\n", argv[0]) ;
          exit(1) ;
   }
-  lire_les_joueurs(&ens, argv[1]) ;
+  ens = lire_les_joueurs(argv[1]) ;
   afficher_ensemble_joueurs(&ens) ;
   while (!fini) {
      printf("\n Requête (G,P,T,Q) : ") ;

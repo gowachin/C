@@ -89,6 +89,7 @@ urlcolor = RoyalBlue
   columns=fullflexible, % was flexible before but it induce space in '/2entier' like '/2 entier'
   showstringspaces=false ,
   literate=%
+         {ê}{{\^e}}1
          {é}{{\'e}}1}
         
           \newcommand{\FSource}[1]{%
@@ -159,9 +160,9 @@ Les fichiers sources en C sont compilés avec clang, et un nom est donné avec l
 
 
 [a]
-Le nom du type représentant un ensemble de joueurs et \textbf{joueurs}.
+Le nom du type représentant un ensemble de joueurs est \textbf{joueurs}.
 Les joueurs sont representés sous forme d'un tableau qui regroupe tout les joueurs avec leurs nombres de billes.
-Le cardinal maximal du nombre de joueur est 100 et la taille maximum du nom d'un joueur est de 32.
+Le cardinal maximal du nombre de joueurs est 100 et la taille maximum du nom d'un joueur est de 32.
 
 
 [b]
@@ -178,8 +179,6 @@ Qui voulez-vous ? bob
 -- Joueur absent de l'ensemble
 Qui voulez-vous ? q
 \end{lstlisting}
-
-On note qu'on ne peut pas compiler plusieurs fichier et spécifier le nom de sortie avec l'option \textbf{-o}.
 
 \newpage
 [c]
@@ -254,6 +253,8 @@ Qui voulez-vous ? mogway
 Qui voulez-vous ? q
 \end{lstlisting}
 
+
+\subsection*{Lecture et écriture d'un ensemble dans un fichier}
 
 [d]
 \begin{lstlisting}[numbers=left, firstnumber = 0 ]
@@ -358,9 +359,61 @@ joueurs lire_les_joueurs(char *nom_fich){
     return ens;
 }
 \end{lstlisting}
+Le fichier de sortie n'est pas modifié, du moins il est remplacé par exactement les mêmes valeurs, aucune modifications ne sont faites.
+Pour le vérifier, il suffit d'enregistrer les joueurs dans un nouveau fichier et d'utiliser la commande suivante : 
+\textbf{diff ancien\_joueur.txt nouveau\_joueur.txt}.
 
 
+\subsection*{3 Gestion d’un ensemble}
 
+[g]
+\begin{lstlisting}
+[~/INF203/TP8]: tail -n3 joueurs.c 
+void modifier_billes(joueurs *ens, int i, int cpt) {
+  ens->T[i].nb_billes = cpt;
+}
+[~/INF203/TP8]: clang -ogestion joueurs*.c gestion.c operations.c 
+[~/INF203/TP8]: ./gestion gremlins.txt mogway.txt 
+gizmo 113
+stripe 157
+
+ Requête (G,P,T,Q) : T
+Nom du joueur qui gagne ? gizmo
+Nom du joueur qui perd ? stripe
+Montant ? 40
+
+ Requête (G,P,T,Q) : Q
+gizmo 153
+stripe 117
+\end{lstlisting}
+
+
+\begin{lstlisting}[numbers=left, firstnumber = 40 ]
+[~/INF203/TP8]: tail -n23 operations.c 
+int transfert(joueurs *e) {
+  /********** A COMPLETER ***********/
+  int i, j, montant, soldeg, soldep ;
+  char nomp[TAILLE_MAX_NOM], nomg[TAILLE_MAX_NOM] ;
+
+  printf("Nom du joueur qui gagne ? ") ;
+  scanf("%s", nomg) ;
+  printf("Nom du joueur qui perd ? ") ;
+  scanf("%s", nomp) ;
+  i = trouver_joueur(e, nomp);
+  j = trouver_joueur(e, nomg);
+  if (i == -1 || j == -1) { 
+      printf("Inconnu\n") ; return 1 ;
+  }
+  printf("Montant ? ") ;
+  scanf("%d", &montant) ;
+
+  soldeg = billes_joueur(e, j) ;
+  soldep = billes_joueur(e, i) ;
+  modifier_billes(e, j,soldeg+montant) ;
+  modifier_billes(e, i,soldep-montant) ;
+  return 0 ;
+}
+\end{lstlisting}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
